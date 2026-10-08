@@ -36,6 +36,27 @@ internal object DesktopAppearanceSettings {
     fun setHideVolumeBar(value: Boolean) = write(KEY_HIDE_VOLUME_BAR, value, _hideVolumeBar)
 
 
+    private val _openCanvasEnabled = flag(KEY_OPENCANVAS_ENABLED, true)
+    private val _openCanvasResolution = MutableStateFlow(
+        DesktopPersistence().string(KEY_OPENCANVAS_RESOLUTION, "720p")
+    )
+
+    /** Enables OpenCanvas dynamic video canvas streaming. */
+    val openCanvasEnabled: StateFlow<Boolean> = _openCanvasEnabled
+
+    /** Full synced vertical music video mode instead of hook loop. */
+
+    /** Preferred stream resolution for OpenCanvas (e.g., 360p, 480p, 720p, 1080p). */
+    val openCanvasResolution: StateFlow<String> = _openCanvasResolution
+
+    fun setOpenCanvasEnabled(value: Boolean) = write(KEY_OPENCANVAS_ENABLED, value, _openCanvasEnabled)
+
+
+    fun setOpenCanvasResolution(value: String) {
+        DesktopPersistence().saveString(KEY_OPENCANVAS_RESOLUTION, value)
+        _openCanvasResolution.value = value
+    }
+
     private fun write(key: String, value: Boolean, into: MutableStateFlow<Boolean>) {
         DesktopPersistence().saveBoolean(key, value)
         into.value = value
@@ -44,4 +65,6 @@ internal object DesktopAppearanceSettings {
     internal const val KEY_REDUCE_ANIMATION = "reduce_animation"
     internal const val KEY_REDUCE_DYNAMIC_BLUR = "reduce_dynamic_blur"
     internal const val KEY_HIDE_VOLUME_BAR = "hide_volume_bar"
+    internal const val KEY_OPENCANVAS_ENABLED = "opencanvas_enabled"
+    internal const val KEY_OPENCANVAS_RESOLUTION = "opencanvas_resolution"
 }
